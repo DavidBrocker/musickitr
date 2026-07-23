@@ -16,5 +16,7 @@
   : Pairwise Jaccard similarity matrix across a tidy tibble
 - [`mk_search()`](https://davidbrocker.github.io/musickitr/reference/mk_search.md)
   : Search the Apple Music catalog
+- [`mk_similar_artists()`](https://davidbrocker.github.io/musickitr/reference/mk_similar_artists.md)
+  : Find artists similar to a given artist
 - [`mk_token()`](https://davidbrocker.github.io/musickitr/reference/mk_token.md)
   : Generate an Apple Music API developer token

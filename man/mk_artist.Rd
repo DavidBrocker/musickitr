@@ -4,7 +4,13 @@
 \alias{mk_artist}
 \title{Fetch a single artist by catalog ID}
 \usage{
-mk_artist(id, storefront = NULL, creds = mk_credentials())
+mk_artist(
+  id,
+  storefront = NULL,
+  image_width = 300,
+  image_height = 300,
+  creds = mk_credentials()
+)
 }
 \arguments{
 \item{id}{Catalog artist ID.}
@@ -12,11 +18,16 @@ mk_artist(id, storefront = NULL, creds = mk_credentials())
 \item{storefront}{Storefront code, e.g. \code{"us"}. Defaults to
 \code{creds$storefront}.}
 
+\item{image_width, image_height}{Pixel dimensions to resolve the
+artist's artwork template to (see \code{image_url} in the return value).
+Defaults to 300x300.}
+
 \item{creds}{A credentials list from \code{\link[=mk_credentials]{mk_credentials()}}.}
 }
 \value{
 A one-row tibble, same shape as the \code{artists} tibble returned
-by \code{\link[=mk_search]{mk_search()}}.
+by \code{\link[=mk_search]{mk_search()}}, including an \code{image_url} column ready to use
+directly (e.g. as \code{circularImage} node icons in visNetwork).
 }
 \description{
 Fetch a single artist by catalog ID
@@ -24,5 +35,6 @@ Fetch a single artist by catalog ID
 \examples{
 \dontrun{
 mk_artist("623897863") # Bad Suns
+mk_artist("623897863", image_width = 600, image_height = 600)
 }
 }

@@ -26,12 +26,15 @@
 #'   the rate limit on larger graphs. Defaults to 0.1.
 #' @param storefront Storefront code, e.g. `"us"`. Defaults to
 #'   `creds$storefront`.
+#' @param image_width,image_height Pixel dimensions to resolve each
+#'   node's artwork template to (see `image_url` in the return value).
+#'   Defaults to 300x300.
 #' @param creds A credentials list from [mk_credentials()].
 #'
 #' @return A list with two tibbles:
 #'   \describe{
 #'     \item{nodes}{One row per artist: `id`, `name`, `genres`, `url`,
-#'       and `hop` (0 for the seed).}
+#'       `image_url`, and `hop` (0 for the seed).}
 #'     \item{edges}{One row per discovered similarity: `from`, `to`, and
 #'       `similarity` (Jaccard overlap of the two artists' genres).}
 #'   }
@@ -44,10 +47,17 @@
 #' @export
 mk_similarity_graph <- function(seed_id, hops = 2, limit_per_artist = 5,
                                   max_nodes = 150, delay = 0.1,
-                                  storefront = NULL, creds = mk_credentials()) {
+                                  storefront = NULL, image_width = 300, image_height = 300,
+                                  creds = mk_credentials()) {
   stopifnot(hops >= 1, limit_per_artist >= 1, max_nodes >= 1)
 
-  seed <- mk_artist(seed_id, storefront = storefront, creds = creds)
+  seed <- mk_artist(
+    seed_id,
+    storefront = storefront,
+    image_width = image_width,
+    image_height = image_height,
+    creds = creds
+  )
   if (nrow(seed) == 0) {
     rlang::abort(
       paste("No artist found for id", seed_id),
@@ -74,7 +84,13 @@ mk_similarity_graph <- function(seed_id, hops = 2, limit_per_artist = 5,
       if (nrow(nodes) >= max_nodes) break
 
       similar <- tryCatch(
-        mk_similar_artists(parent_id, storefront = storefront, creds = creds),
+        mk_similar_artists(
+          parent_id,
+          storefront = storefront,
+          image_width = image_width,
+          image_height = image_height,
+          creds = creds
+        ),
         error = function(e) tibble::tibble()
       )
       if (delay > 0) Sys.sleep(delay)

@@ -18,14 +18,39 @@ column_or_na <- function(df, name, n = nrow(df)) {
   if (name %in% names(df)) df[[name]] else rep(NA, n)
 }
 
+#' Resolve an Apple Music artwork template into a real image URL
+#'
+#' Apple Music artwork URLs are templates like
+#' `".../623897863/{w}x{h}bb.jpg"` -- the literal `{w}`/`{h}` placeholders
+#' have to be substituted with actual pixel dimensions before the URL
+#' points at a real image (e.g. for `circularImage` nodes in visNetwork).
+#'
+#' @param template Character vector of artwork URL templates (may contain
+#'   `NA`).
+#' @param width,height Pixel dimensions to request.
+#' @return A character vector of resolved image URLs.
 #' @keywords internal
-mk_tidy_artists <- function(data) {
+mk_artwork_url <- function(template, width = 300, height = 300) {
+  vapply(template, function(t) {
+    if (is.na(t) || !nzchar(t)) return(NA_character_)
+    t <- sub("{w}", width, t, fixed = TRUE)
+    sub("{h}", height, t, fixed = TRUE)
+  }, character(1), USE.NAMES = FALSE)
+}
+
+#' @keywords internal
+mk_tidy_artists <- function(data, image_width = 300, image_height = 300) {
   if (is.null(data) || nrow(data) == 0) return(tibble::tibble())
   tibble::tibble(
     id = column_or_na(data, "id"),
     name = column_or_na(data, "attributes.name"),
     genres = mk_collapse(column_or_na(data, "attributes.genreNames")),
-    url = column_or_na(data, "attributes.url")
+    url = column_or_na(data, "attributes.url"),
+    image_url = mk_artwork_url(
+      column_or_na(data, "attributes.artwork.url"),
+      width = image_width,
+      height = image_height
+    )
   )
 }
 

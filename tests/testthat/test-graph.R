@@ -4,7 +4,7 @@ test_that("mk_similarity_graph respects its caps and returns a sane shape", {
   graph <- mk_similarity_graph("623897863", hops = 2, limit_per_artist = 5, max_nodes = 150) # Bad Suns
 
   expect_true(all(c("nodes", "edges") %in% names(graph)))
-  expect_true(all(c("id", "name", "genres", "url", "hop") %in% names(graph$nodes)))
+  expect_true(all(c("id", "name", "genres", "url", "image_url", "hop") %in% names(graph$nodes)))
   expect_true(all(c("from", "to", "similarity") %in% names(graph$edges)))
 
   # seed is present, at hop 0, and not duplicated

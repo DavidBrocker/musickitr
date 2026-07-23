@@ -11,6 +11,8 @@ mk_similarity_graph(
   max_nodes = 150,
   delay = 0.1,
   storefront = NULL,
+  image_width = 300,
+  image_height = 300,
   creds = mk_credentials()
 )
 }
@@ -31,13 +33,17 @@ the rate limit on larger graphs. Defaults to 0.1.}
 \item{storefront}{Storefront code, e.g. \code{"us"}. Defaults to
 \code{creds$storefront}.}
 
+\item{image_width, image_height}{Pixel dimensions to resolve each
+node's artwork template to (see \code{image_url} in the return value).
+Defaults to 300x300.}
+
 \item{creds}{A credentials list from \code{\link[=mk_credentials]{mk_credentials()}}.}
 }
 \value{
 A list with two tibbles:
 \describe{
 \item{nodes}{One row per artist: \code{id}, \code{name}, \code{genres}, \code{url},
-and \code{hop} (0 for the seed).}
+\code{image_url}, and \code{hop} (0 for the seed).}
 \item{edges}{One row per discovered similarity: \code{from}, \code{to}, and
 \code{similarity} (Jaccard overlap of the two artists' genres).}
 }

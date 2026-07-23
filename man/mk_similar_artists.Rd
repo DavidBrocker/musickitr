@@ -4,7 +4,13 @@
 \alias{mk_similar_artists}
 \title{Find artists similar to a given artist}
 \usage{
-mk_similar_artists(id, storefront = NULL, creds = mk_credentials())
+mk_similar_artists(
+  id,
+  storefront = NULL,
+  image_width = 300,
+  image_height = 300,
+  creds = mk_credentials()
+)
 }
 \arguments{
 \item{id}{Catalog artist ID (e.g. from \code{\link[=mk_search]{mk_search()}}'s \code{id} column).}
@@ -12,11 +18,14 @@ mk_similar_artists(id, storefront = NULL, creds = mk_credentials())
 \item{storefront}{Storefront code, e.g. \code{"us"}. Defaults to
 \code{creds$storefront}.}
 
+\item{image_width, image_height}{Pixel dimensions to resolve each
+similar artist's artwork template to. Defaults to 300x300.}
+
 \item{creds}{A credentials list from \code{\link[=mk_credentials]{mk_credentials()}}.}
 }
 \value{
 A tibble of similar artists, same shape as the \code{artists}
-tibble returned by \code{\link[=mk_search]{mk_search()}}.
+tibble returned by \code{\link[=mk_search]{mk_search()}}, including an \code{image_url} column.
 }
 \description{
 Wraps the Apple Music "similar artists" view

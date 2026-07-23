@@ -4,3 +4,5 @@
 .Ruserdata
 *.p8
 .env
+.DS_Store
+docs

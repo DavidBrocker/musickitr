@@ -12,6 +12,7 @@ Provides tidy, tibble-based access to the Apple Music Catalog API (search, chart
 Useful links:
 \itemize{
   \item \url{https://github.com/DavidBrocker/musickitr}
+  \item \url{https://davidbrocker.github.io/musickitr/}
   \item Report bugs at \url{https://github.com/DavidBrocker/musickitr/issues}
 }
 

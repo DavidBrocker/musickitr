@@ -1,3 +1,22 @@
+#' Fetch a single artist by catalog ID
+#'
+#' @param id Catalog artist ID.
+#' @param storefront Storefront code, e.g. `"us"`. Defaults to
+#'   `creds$storefront`.
+#' @param creds A credentials list from [mk_credentials()].
+#' @return A one-row tibble, same shape as the `artists` tibble returned
+#'   by [mk_search()].
+#' @examples
+#' \dontrun{
+#' mk_artist("623897863") # Bad Suns
+#' }
+#' @export
+mk_artist <- function(id, storefront = NULL, creds = mk_credentials()) {
+  sf <- storefront %||% creds$storefront
+  resp <- mk_get(paste0("/v1/catalog/", sf, "/artists/", id), creds = creds)
+  mk_tidy_artists(resp$data)
+}
+
 #' Find artists similar to a given artist
 #'
 #' Wraps the Apple Music "similar artists" view

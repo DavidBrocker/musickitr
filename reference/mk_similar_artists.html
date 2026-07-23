@@ -59,7 +59,13 @@ signal available for a given artist.</p>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">mk_similar_artists</span><span class="op">(</span><span class="va">id</span>, storefront <span class="op">=</span> <span class="cn">NULL</span>, creds <span class="op">=</span> <span class="fu"><a href="mk_credentials.html">mk_credentials</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">mk_similar_artists</span><span class="op">(</span></span>
+<span>  <span class="va">id</span>,</span>
+<span>  storefront <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  image_width <span class="op">=</span> <span class="fl">300</span>,</span>
+<span>  image_height <span class="op">=</span> <span class="fl">300</span>,</span>
+<span>  creds <span class="op">=</span> <span class="fu"><a href="mk_credentials.html">mk_credentials</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -75,6 +81,11 @@ signal available for a given artist.</p>
 <code>creds$storefront</code>.</p></dd>
 
 
+<dt id="arg-image-width-image-height">image_width, image_height<a class="anchor" aria-label="anchor" href="#arg-image-width-image-height"></a></dt>
+<dd><p>Pixel dimensions to resolve each
+similar artist's artwork template to. Defaults to 300x300.</p></dd>
+
+
 <dt id="arg-creds">creds<a class="anchor" aria-label="anchor" href="#arg-creds"></a></dt>
 <dd><p>A credentials list from <code><a href="mk_credentials.html">mk_credentials()</a></code>.</p></dd>
 
@@ -82,7 +93,7 @@ signal available for a given artist.</p>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>A tibble of similar artists, same shape as the <code>artists</code>
-tibble returned by <code><a href="mk_search.html">mk_search()</a></code>.</p>
+tibble returned by <code><a href="mk_search.html">mk_search()</a></code>, including an <code>image_url</code> column.</p>
     </div>
 
     <div class="section level2">

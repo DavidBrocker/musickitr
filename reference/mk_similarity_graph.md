@@ -20,6 +20,8 @@ mk_similarity_graph(
   max_nodes = 150,
   delay = 0.1,
   storefront = NULL,
+  image_width = 300,
+  image_height = 300,
   creds = mk_credentials()
 )
 ```
@@ -53,6 +55,11 @@ mk_similarity_graph(
 
   Storefront code, e.g. `"us"`. Defaults to `creds$storefront`.
 
+- image_width, image_height:
+
+  Pixel dimensions to resolve each node's artwork template to (see
+  `image_url` in the return value). Defaults to 300x300.
+
 - creds:
 
   A credentials list from
@@ -64,8 +71,8 @@ A list with two tibbles:
 
 - nodes:
 
-  One row per artist: `id`, `name`, `genres`, `url`, and `hop` (0 for
-  the seed).
+  One row per artist: `id`, `name`, `genres`, `url`, `image_url`, and
+  `hop` (0 for the seed).
 
 - edges:
 

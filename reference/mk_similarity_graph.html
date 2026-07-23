@@ -66,6 +66,8 @@ actually look at over a complete one.</p>
 <span>  max_nodes <span class="op">=</span> <span class="fl">150</span>,</span>
 <span>  delay <span class="op">=</span> <span class="fl">0.1</span>,</span>
 <span>  storefront <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  image_width <span class="op">=</span> <span class="fl">300</span>,</span>
+<span>  image_height <span class="op">=</span> <span class="fl">300</span>,</span>
 <span>  creds <span class="op">=</span> <span class="fu"><a href="mk_credentials.html">mk_credentials</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -102,6 +104,12 @@ the rate limit on larger graphs. Defaults to 0.1.</p></dd>
 <code>creds$storefront</code>.</p></dd>
 
 
+<dt id="arg-image-width-image-height">image_width, image_height<a class="anchor" aria-label="anchor" href="#arg-image-width-image-height"></a></dt>
+<dd><p>Pixel dimensions to resolve each
+node's artwork template to (see <code>image_url</code> in the return value).
+Defaults to 300x300.</p></dd>
+
+
 <dt id="arg-creds">creds<a class="anchor" aria-label="anchor" href="#arg-creds"></a></dt>
 <dd><p>A credentials list from <code><a href="mk_credentials.html">mk_credentials()</a></code>.</p></dd>
 
@@ -110,7 +118,7 @@ the rate limit on larger graphs. Defaults to 0.1.</p></dd>
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>A list with two tibbles:</p><dl><dt>nodes</dt>
 <dd><p>One row per artist: <code>id</code>, <code>name</code>, <code>genres</code>, <code>url</code>,
-and <code>hop</code> (0 for the seed).</p></dd>
+<code>image_url</code>, and <code>hop</code> (0 for the seed).</p></dd>
 
 <dt>edges</dt>
 <dd><p>One row per discovered similarity: <code>from</code>, <code>to</code>, and

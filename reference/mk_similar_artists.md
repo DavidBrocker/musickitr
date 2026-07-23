@@ -12,7 +12,13 @@ for a given artist.
 ## Usage
 
 ``` r
-mk_similar_artists(id, storefront = NULL, creds = mk_credentials())
+mk_similar_artists(
+  id,
+  storefront = NULL,
+  image_width = 300,
+  image_height = 300,
+  creds = mk_credentials()
+)
 ```
 
 ## Arguments
@@ -27,6 +33,11 @@ mk_similar_artists(id, storefront = NULL, creds = mk_credentials())
 
   Storefront code, e.g. `"us"`. Defaults to `creds$storefront`.
 
+- image_width, image_height:
+
+  Pixel dimensions to resolve each similar artist's artwork template to.
+  Defaults to 300x300.
+
 - creds:
 
   A credentials list from
@@ -36,7 +47,8 @@ mk_similar_artists(id, storefront = NULL, creds = mk_credentials())
 
 A tibble of similar artists, same shape as the `artists` tibble returned
 by
-[`mk_search()`](https://davidbrocker.github.io/musickitr/reference/mk_search.md).
+[`mk_search()`](https://davidbrocker.github.io/musickitr/reference/mk_search.md),
+including an `image_url` column.
 
 ## Examples
 

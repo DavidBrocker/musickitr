@@ -6,6 +6,7 @@
 <url><loc>https://davidbrocker.github.io/musickitr/index.html</loc></url>
 <url><loc>https://davidbrocker.github.io/musickitr/reference/der_ecdsa_to_raw.html</loc></url>
 <url><loc>https://davidbrocker.github.io/musickitr/reference/index.html</loc></url>
+<url><loc>https://davidbrocker.github.io/musickitr/reference/mk_artist.html</loc></url>
 <url><loc>https://davidbrocker.github.io/musickitr/reference/mk_charts.html</loc></url>
 <url><loc>https://davidbrocker.github.io/musickitr/reference/mk_collapse.html</loc></url>
 <url><loc>https://davidbrocker.github.io/musickitr/reference/mk_credentials.html</loc></url>
@@ -14,6 +15,7 @@
 <url><loc>https://davidbrocker.github.io/musickitr/reference/mk_jaccard_matrix.html</loc></url>
 <url><loc>https://davidbrocker.github.io/musickitr/reference/mk_search.html</loc></url>
 <url><loc>https://davidbrocker.github.io/musickitr/reference/mk_similar_artists.html</loc></url>
+<url><loc>https://davidbrocker.github.io/musickitr/reference/mk_similarity_graph.html</loc></url>
 <url><loc>https://davidbrocker.github.io/musickitr/reference/mk_token.html</loc></url>
 <url><loc>https://davidbrocker.github.io/musickitr/reference/musickitr-package.html</loc></url>
 </urlset>

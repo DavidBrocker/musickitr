@@ -2,6 +2,8 @@
 
 ## All functions
 
+- [`mk_artist()`](https://davidbrocker.github.io/musickitr/reference/mk_artist.md)
+  : Fetch a single artist by catalog ID
 - [`mk_charts()`](https://davidbrocker.github.io/musickitr/reference/mk_charts.md)
   : Fetch Apple Music charts
 - [`mk_collapse()`](https://davidbrocker.github.io/musickitr/reference/mk_collapse.md)
@@ -18,5 +20,7 @@
   : Search the Apple Music catalog
 - [`mk_similar_artists()`](https://davidbrocker.github.io/musickitr/reference/mk_similar_artists.md)
   : Find artists similar to a given artist
+- [`mk_similarity_graph()`](https://davidbrocker.github.io/musickitr/reference/mk_similarity_graph.md)
+  : Build a similarity graph by expanding outward from a seed artist
 - [`mk_token()`](https://davidbrocker.github.io/musickitr/reference/mk_token.md)
   : Generate an Apple Music API developer token

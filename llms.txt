@@ -104,3 +104,9 @@ etc.) welcome.
 - [`mk_token()`](https://davidbrocker.github.io/musickitr/reference/mk_token.md)
   : Generate an Apple Music API developer token
 
+# Articles
+
+### All vignettes
+
+- [Getting Started with
+  musickitr](https://davidbrocker.github.io/musickitr/articles/getting-started.md):

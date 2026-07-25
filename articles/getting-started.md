@@ -1,0 +1,232 @@
+# Getting Started with musickitr
+
+musickitr gives you tidy, tibble-based access to the Apple Music Catalog
+API – search, charts, similar-artist recommendations, and a couple of
+similarity utilities for building recommendation or “matchup” style
+tools, in the spirit of
+[spotifyr](https://github.com/charlie86/spotifyr).
+
+This vignette walks through the core functions and ends by building and
+visualizing an artist “constellation” – a graph of similar artists
+expanded outward from a single seed.
+
+## Bring your own credentials
+
+Apple Music access requires an active [Apple Developer
+Program](https://developer.apple.com/programs/) membership. musickitr
+never stores, transmits, or logs your credentials anywhere but directly
+to Apple – see the
+[README](https://github.com/DavidBrocker/musickitr#bring-your-own-credentials)
+for the one-time setup (Team ID, Key ID, and a MusicKit private key, set
+as environment variables).
+
+``` r
+
+library(musickitr)
+```
+
+## Searching the catalog
+
+[`mk_search()`](https://davidbrocker.github.io/musickitr/reference/mk_search.md)
+returns a named list of tibbles, one per resource type you ask for:
+
+``` r
+
+results <- mk_search("Bad Suns", types = c("artists", "albums"))
+results$artists
+#> # A tibble: 1 × 5
+#>   id        name     genres      url                                   image_url
+#>   <chr>     <chr>    <chr>       <chr>                                 <chr>    
+#> 1 623897863 Bad Suns Alternative https://music.apple.com/us/artist/ba… https://…
+```
+
+``` r
+
+results$albums
+#> # A tibble: 25 × 7
+#>    id         name             artist_name release_date track_count genres url  
+#>    <chr>      <chr>            <chr>       <chr>              <int> <chr>  <chr>
+#>  1 1715014170 Language & Pers… Bad Suns    2014-06-24            11 Alter… http…
+#>  2 1806112850 Accelerator      Bad Suns    2025-08-08            12 Alter… http…
+#>  3 1766960694 Disappear Here   Bad Suns    2016-09-16            13 Alter… http…
+#>  4 1643233360 Apocalypse When… Bad Suns    2022-09-30            16 Alter… http…
+#>  5 1485073939 Mystic Truth     Bad Suns    2019-03-22            10 Alter… http…
+#>  6 1530339165 Baby Blue Shade… Bad Suns    2020-09-28             1 Alter… http…
+#>  7 1634799722 Maybe You Saved… Bad Suns &… 2022-08-01             1 Alter… http…
+#>  8 1583061270 Apocalypse When… Bad Suns    2022-01-28            13 Alter… http…
+#>  9 1711059239 Infinite Joy - … Bad Suns    2023-11-17             6 Alter… http…
+#> 10 1713858955 Transpose EP     Bad Suns    2013                   4 Alter… http…
+#> # ℹ 15 more rows
+```
+
+## Charts, as a popularity proxy
+
+The Catalog API has no numeric popularity score for artists or songs –
+unlike, say, Spotify’s `popularity` field. The closest thing available
+is **chart rank**:
+[`mk_charts()`](https://davidbrocker.github.io/musickitr/reference/mk_charts.md)
+returns entries in ranked order, with a `rank` column attached.
+
+``` r
+
+charts <- mk_charts(types = "songs", limit = 10)
+charts$songs
+#> # A tibble: 10 × 9
+#>    id         name  artist_name album_name duration_ms release_date genres url  
+#>    <chr>      <chr> <chr>       <chr>            <int> <chr>        <chr>  <chr>
+#>  1 6792676860 Been… Morgan Wal… Been By N…      213806 2026-07-24   Count… http…
+#>  2 1844932150 Choo… Ella Langl… Choosin' …      232226 2025-10-17   Count… http…
+#>  3 6790569133 Dead… Lil Baby    Dead Fres…      157020 2026-07-17   Hip-H… http…
+#>  4 6769568596 Jani… Drake       ICEMAN          237344 2026-05-15   Hip-H… http…
+#>  5 6763091996 I Ca… Ella Langl… I Can't L…      228837 2026-04-24   Count… http…
+#>  6 1869436845 Be H… Ella Langl… Dandelion       217240 2026-02-13   Count… http…
+#>  7 6769568598 Shab… Drake       ICEMAN          188723 2026-05-15   Hip-H… http…
+#>  8 1802104202 20 C… Morgan Wal… I’m The P…      160902 2025-05-16   Count… http…
+#>  9 1892189612 Spen… Yung Miami  Spend Dat…      181392 2026-04-23   Hip-H… http…
+#> 10 1889992115 stup… Olivia Rod… you seem …      209680 2026-06-12   Pop, … http…
+#> # ℹ 1 more variable: rank <int>
+```
+
+## Similar artists
+
+[`mk_similar_artists()`](https://davidbrocker.github.io/musickitr/reference/mk_similar_artists.md)
+wraps Apple’s “similar artists” view – the same relationship the
+[MusicMatchup](https://github.com/DavidBrocker/MusicMatchup) app uses
+via native MusicKit’s `Artist.similarArtists`.
+
+``` r
+
+mk_similar_artists("623897863") # Bad Suns
+#> # A tibble: 10 × 5
+#>    id         name            genres      url                          image_url
+#>    <chr>      <chr>           <chr>       <chr>                        <chr>    
+#>  1 965021417  COIN            Alternative https://music.apple.com/us/… https://…
+#>  2 1050839371 HUNNY           Alternative https://music.apple.com/us/… https://…
+#>  3 920694238  Hippo Campus    Alternative https://music.apple.com/us/… https://…
+#>  4 394582977  Young the Giant Alternative https://music.apple.com/us/… https://…
+#>  5 699683094  Vinyl Theatre   Alternative https://music.apple.com/us/… https://…
+#>  6 908588433  CRUISR          Alternative https://music.apple.com/us/… https://…
+#>  7 386174128  Finish Ticket   Alternative https://music.apple.com/us/… https://…
+#>  8 648584116  Smallpools      Alternative https://music.apple.com/us/… https://…
+#>  9 1097752725 The Band CAMINO Alternative https://music.apple.com/us/… https://…
+#> 10 404034265  Wild Party      Alternative https://music.apple.com/us/… https://…
+```
+
+## Jaccard similarity
+
+[`mk_jaccard()`](https://davidbrocker.github.io/musickitr/reference/mk_jaccard.md)
+computes set overlap between any two character vectors – useful for
+comparing artists by genre, or any other set-shaped feature.
+
+``` r
+
+mk_jaccard(c("Alternative", "Rock"), c("Rock", "Indie Rock"))
+#> [1] 0.3333333
+```
+
+[`mk_jaccard_matrix()`](https://davidbrocker.github.io/musickitr/reference/mk_jaccard_matrix.md)
+does this pairwise across a whole tibble, ready to use as edge weights
+in a network:
+
+``` r
+
+mk_jaccard_matrix(charts$songs, id_col = "name", set_col = "genres")
+#> # A tibble: 45 × 3
+#>    item_a         item_b                   similarity
+#>    <chr>          <chr>                         <dbl>
+#>  1 Been By Now    Choosin' Texas                1    
+#>  2 Been By Now    Dead Fresh                    0.333
+#>  3 Been By Now    Janice STFU                   0.333
+#>  4 Been By Now    I Can't Love You Anymore      1    
+#>  5 Been By Now    Be Her                        1    
+#>  6 Been By Now    Shabang                       0.333
+#>  7 Been By Now    20 Cigarettes                 1    
+#>  8 Been By Now    Spend Dat                     0.333
+#>  9 Been By Now    stupid song                   0.333
+#> 10 Choosin' Texas Dead Fresh                    0.333
+#> # ℹ 35 more rows
+```
+
+## Building a constellation
+
+[`mk_similarity_graph()`](https://davidbrocker.github.io/musickitr/reference/mk_similarity_graph.md)
+expands outward from a seed artist, breadth-first, calling
+[`mk_similar_artists()`](https://davidbrocker.github.io/musickitr/reference/mk_similar_artists.md)
+at each hop – the same seed-artist/hop model the MusicMatchup app uses.
+Growing one of these by hand tends to get crowded fast (each artist can
+return up to 10 similar artists, so an unbounded 2-hop walk can explode
+past 100 nodes), so the defaults deliberately cap both the branching
+factor per artist and the total graph size.
+
+``` r
+
+graph <- mk_similarity_graph("623897863", hops = 2) # Bad Suns
+nrow(graph$nodes)
+#> [1] 19
+nrow(graph$edges)
+#> [1] 30
+graph$nodes
+#> # A tibble: 19 × 6
+#>    id         name              genres            url            image_url   hop
+#>    <chr>      <chr>             <chr>             <chr>          <chr>     <int>
+#>  1 623897863  Bad Suns          Alternative       https://music… https://…     0
+#>  2 965021417  COIN              Alternative       https://music… https://…     1
+#>  3 1050839371 HUNNY             Alternative       https://music… https://…     1
+#>  4 920694238  Hippo Campus      Alternative       https://music… https://…     1
+#>  5 394582977  Young the Giant   Alternative       https://music… https://…     1
+#>  6 699683094  Vinyl Theatre     Alternative       https://music… https://…     1
+#>  7 757893904  Colony House      Alternative       https://music… https://…     2
+#>  8 908588433  CRUISR            Alternative       https://music… https://…     2
+#>  9 1225257328 Wallows           Alternative       https://music… https://…     2
+#> 10 404034265  Wild Party        Alternative       https://music… https://…     2
+#> 11 1524843465 Lupin             Alternative       https://music… https://…     2
+#> 12 1468640912 Brotherkenzie     Singer/Songwriter https://music… https://…     2
+#> 13 1447881532 Baby Boys         Alternative       https://music… https://…     2
+#> 14 267957933  Cage the Elephant Alternative       https://music… https://…     2
+#> 15 410732500  GROUPLOVE         Alternative       https://music… https://…     2
+#> 16 414023649  Foster the People Alternative       https://music… https://…     2
+#> 17 923255950  BØRNS             Alternative       https://music… https://…     2
+#> 18 386174128  Finish Ticket     Alternative       https://music… https://…     2
+#> 19 648584116  Smallpools        Alternative       https://music… https://…     2
+```
+
+## Visualizing it
+
+Every node already carries a resolved `image_url` (Apple’s artwork
+template, with real pixel dimensions substituted in), which drops
+straight into a
+[visNetwork](https://datastorm-open.github.io/visNetwork/) graph as
+`circularImage` node icons:
+
+``` r
+
+library(visNetwork)
+
+nodes <- graph$nodes
+nodes$label <- nodes$name
+nodes$shape <- "circularImage"
+nodes$image <- nodes$image_url
+nodes$size <- ifelse(nodes$hop == 0, 40, 25)
+
+edges <- graph$edges
+edges$width <- edges$similarity * 3
+
+network <- visNetwork(nodes, edges) |>
+  visEdges(color = list(color = "#8899aa", opacity = 0.6)) |>
+  visPhysics(stabilization = TRUE) |>
+  visEvents(stabilizationIterationsDone = "function () { this.fit(); }")
+
+htmlwidgets::saveWidget(network, "getting-started-network.html", selfcontained = TRUE)
+```
+
+## Next steps
+
+- Try a different seed artist, or increase `hops`/`limit_per_artist` on
+  [`mk_similarity_graph()`](https://davidbrocker.github.io/musickitr/reference/mk_similarity_graph.md)
+  – watch how quickly the graph grows.
+- Aggregate `genres` across a graph’s nodes for a “taste fingerprint” of
+  a whole constellation.
+- See
+  [`?mk_get`](https://davidbrocker.github.io/musickitr/reference/mk_get.md)
+  for calling any Apple Music API endpoint musickitr doesn’t have a
+  dedicated wrapper for yet.

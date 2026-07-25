@@ -1,7 +1,10 @@
 Package: musickitr
 Title: Tidy Access to the Apple Music API
 Version: 0.0.0.9000
-Authors@R: person("David", "Brocker", email = "davidabrocker@gmail.com", role = c("aut", "cre"))
+Authors@R: c(
+    person("David", "Brocker", email = "davidabrocker@gmail.com", role = c("aut", "cre")),
+    person("Claude", role = "ctb", comment = "Anthropic's Claude Sonnet 5; implementation, testing, and documentation assistance")
+    )
 Description: Provides tidy, tibble-based access to the Apple Music Catalog
     API (search, charts, artists, albums, songs) plus a few similarity
     utilities useful for building music recommendation and matchup

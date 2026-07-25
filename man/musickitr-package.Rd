@@ -6,6 +6,8 @@
 \alias{musickitr-package}
 \title{musickitr: Tidy Access to the Apple Music API}
 \description{
+\if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
+
 Provides tidy, tibble-based access to the Apple Music Catalog API (search, charts, artists, albums, songs) plus a few similarity utilities useful for building music recommendation and matchup tools. Users must bring their own MusicKit developer credentials (Team ID, Key ID, and private key) from an active Apple Developer Program membership.
 }
 \seealso{
@@ -23,6 +25,11 @@ Useful links:
 Authors:
 \itemize{
   \item David Brocker \email{davidabrocker@gmail.com}
+}
+
+Other contributors:
+\itemize{
+  \item Claude (Anthropic's Claude Sonnet 5; implementation, testing, and documentation assistance) [contributor]
 }
 
 }

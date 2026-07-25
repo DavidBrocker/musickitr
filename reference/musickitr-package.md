@@ -23,3 +23,8 @@ Useful links:
 Authors:
 
 - David Brocker <davidabrocker@gmail.com>
+
+Other contributors:
+
+- Claude (Anthropic's Claude Sonnet 5; implementation, testing, and
+  documentation assistance) \[contributor\]

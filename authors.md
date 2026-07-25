@@ -4,6 +4,10 @@
 
 - **David Brocker**. Author, maintainer.
 
+- **Claude**. Contributor.  
+  Anthropic's Claude Sonnet 5; implementation, testing, and
+  documentation assistance
+
 ## Citation
 
 Source:

@@ -1,0 +1,151 @@
+---
+title: "Getting Started with musickitr"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Getting Started with musickitr}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "getting-started-",
+  out.width = "100%"
+)
+```
+
+musickitr gives you tidy, tibble-based access to the Apple Music Catalog
+API -- search, charts, similar-artist recommendations, and a couple of
+similarity utilities for building recommendation or "matchup" style
+tools, in the spirit of
+[spotifyr](https://github.com/charlie86/spotifyr).
+
+This vignette walks through the core functions and ends by building and
+visualizing an artist "constellation" -- a graph of similar artists
+expanded outward from a single seed.
+
+## Bring your own credentials
+
+Apple Music access requires an active
+[Apple Developer Program](https://developer.apple.com/programs/)
+membership. musickitr never stores, transmits, or logs your credentials
+anywhere but directly to Apple -- see the
+[README](https://github.com/DavidBrocker/musickitr#bring-your-own-credentials)
+for the one-time setup (Team ID, Key ID, and a MusicKit private key, set
+as environment variables).
+
+```{r setup}
+library(musickitr)
+```
+
+## Searching the catalog
+
+`mk_search()` returns a named list of tibbles, one per resource type you
+ask for:
+
+```{r search}
+results <- mk_search("Bad Suns", types = c("artists", "albums"))
+results$artists
+```
+
+```{r search-albums}
+results$albums
+```
+
+## Charts, as a popularity proxy
+
+The Catalog API has no numeric popularity score for artists or songs --
+unlike, say, Spotify's `popularity` field. The closest thing available
+is **chart rank**: `mk_charts()` returns entries in ranked order, with a
+`rank` column attached.
+
+```{r charts}
+charts <- mk_charts(types = "songs", limit = 10)
+charts$songs
+```
+
+## Similar artists
+
+`mk_similar_artists()` wraps Apple's "similar artists" view -- the same
+relationship the
+[MusicMatchup](https://github.com/DavidBrocker/MusicMatchup) app uses via
+native MusicKit's `Artist.similarArtists`.
+
+```{r similar}
+mk_similar_artists("623897863") # Bad Suns
+```
+
+## Jaccard similarity
+
+`mk_jaccard()` computes set overlap between any two character vectors --
+useful for comparing artists by genre, or any other set-shaped feature.
+
+```{r jaccard}
+mk_jaccard(c("Alternative", "Rock"), c("Rock", "Indie Rock"))
+```
+
+`mk_jaccard_matrix()` does this pairwise across a whole tibble, ready to
+use as edge weights in a network:
+
+```{r jaccard-matrix}
+mk_jaccard_matrix(charts$songs, id_col = "name", set_col = "genres")
+```
+
+## Building a constellation
+
+`mk_similarity_graph()` expands outward from a seed artist,
+breadth-first, calling `mk_similar_artists()` at each hop -- the same
+seed-artist/hop model the MusicMatchup app uses. Growing one of these by
+hand tends to get crowded fast (each artist can return up to 10 similar
+artists, so an unbounded 2-hop walk can explode past 100 nodes), so the
+defaults deliberately cap both the branching factor per artist and the
+total graph size.
+
+```{r graph}
+graph <- mk_similarity_graph("623897863", hops = 2) # Bad Suns
+nrow(graph$nodes)
+nrow(graph$edges)
+graph$nodes
+```
+
+## Visualizing it
+
+Every node already carries a resolved `image_url` (Apple's artwork
+template, with real pixel dimensions substituted in), which drops
+straight into a [visNetwork](https://datastorm-open.github.io/visNetwork/)
+graph as `circularImage` node icons:
+
+```{r visnetwork, results = "hide"}
+library(visNetwork)
+
+nodes <- graph$nodes
+nodes$label <- nodes$name
+nodes$shape <- "circularImage"
+nodes$image <- nodes$image_url
+nodes$size <- ifelse(nodes$hop == 0, 40, 25)
+
+edges <- graph$edges
+edges$width <- edges$similarity * 3
+
+network <- visNetwork(nodes, edges) |>
+  visEdges(color = list(color = "#8899aa", opacity = 0.6)) |>
+  visPhysics(stabilization = TRUE) |>
+  visEvents(stabilizationIterationsDone = "function () { this.fit(); }")
+
+htmlwidgets::saveWidget(network, "getting-started-network.html", selfcontained = TRUE)
+```
+
+```{r, echo = FALSE, results = "asis"}
+cat('<iframe src="getting-started-network.html" width="100%" height="600" style="border: none;"></iframe>')
+```
+
+## Next steps
+
+- Try a different seed artist, or increase `hops`/`limit_per_artist` on
+  `mk_similarity_graph()` -- watch how quickly the graph grows.
+- Aggregate `genres` across a graph's nodes for a "taste fingerprint" of
+  a whole constellation.
+- See `?mk_get` for calling any Apple Music API endpoint musickitr
+  doesn't have a dedicated wrapper for yet.

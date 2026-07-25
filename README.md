@@ -1,4 +1,4 @@
-# musickitr
+# musickitr <a href="https://davidbrocker.github.io/musickitr/"><img src="man/figures/logo.png" align="right" height="139" alt="musickitr website" /></a>
 
 Tidy, tibble-based access to the Apple Music Catalog API — search, charts, and a few similarity utilities for building recommendation/matchup tools, in the spirit of [spotifyr](https://github.com/charlie86/spotifyr).
 

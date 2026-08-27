@@ -38,6 +38,7 @@ mk_artwork_url <- function(template, width = 300, height = 300) {
   }, character(1), USE.NAMES = FALSE)
 }
 
+#' Tidy an `artists` API response into a flat tibble
 #' @keywords internal
 mk_tidy_artists <- function(data, image_width = 300, image_height = 300) {
   if (is.null(data) || nrow(data) == 0) return(tibble::tibble())
@@ -54,6 +55,25 @@ mk_tidy_artists <- function(data, image_width = 300, image_height = 300) {
   )
 }
 
+# Pull the first preview URL out of each row's `previews` array
+# (`attributes.previews` in the raw response). jsonlite's `flatten =
+# TRUE` only flattens single nested objects into dotted columns --
+# arrays of objects (previews is an array, even though it's almost
+# always length 1) stay as a list-column instead. Missing entirely
+# (library songs don't carry a previews attribute at all) or empty
+# per-row both fall back to NA, same as every column_or_na()-backed
+# field here.
+extract_preview_url <- function(data) {
+  n <- nrow(data)
+  if (!("attributes.previews" %in% names(data))) return(rep(NA_character_, n))
+  vapply(data[["attributes.previews"]], function(p) {
+    if (is.null(p) || length(p) == 0 || is.null(p$url)) return(NA_character_)
+    url <- p$url[1]
+    if (is.na(url)) NA_character_ else as.character(url)
+  }, character(1))
+}
+
+#' Tidy a `songs` API response into a flat tibble
 #' @keywords internal
 mk_tidy_songs <- function(data) {
   if (is.null(data) || nrow(data) == 0) return(tibble::tibble())
@@ -65,10 +85,12 @@ mk_tidy_songs <- function(data) {
     duration_ms = column_or_na(data, "attributes.durationInMillis"),
     release_date = column_or_na(data, "attributes.releaseDate"),
     genres = mk_collapse(column_or_na(data, "attributes.genreNames")),
-    url = column_or_na(data, "attributes.url")
+    url = column_or_na(data, "attributes.url"),
+    preview_url = extract_preview_url(data)
   )
 }
 
+#' Tidy an `albums` API response into a flat tibble
 #' @keywords internal
 mk_tidy_albums <- function(data) {
   if (is.null(data) || nrow(data) == 0) return(tibble::tibble())
